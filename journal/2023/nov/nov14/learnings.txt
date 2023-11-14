@@ -1,0 +1,5 @@
+This https://pramode.in/2019/09/29/notes-on-learning-rust-by-writing-linked-lists/ seems a good article
+
+What i've learnt is that 
+
+- Box returns a pointer not a reference, but rust compiler handles the syntax sugar so it can be used as a pointer 
