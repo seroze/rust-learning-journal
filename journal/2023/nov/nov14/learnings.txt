@@ -2,4 +2,51 @@ This https://pramode.in/2019/09/29/notes-on-learning-rust-by-writing-linked-list
 
 What i've learnt is that 
 
-- Box returns a pointer not a reference, but rust compiler handles the syntax sugar so it can be used as a pointer 
+- Box returns a pointer not a reference, but rust compiler handles the syntax sugar so it can be used as a pointer
+
+
+- std::mem::replace(source, destination)
+    - will replace the contents of source with destination and returns the contents in original source
+
+
+- if your function argument has &self or &mut self then you can't move out self (now it's obvious)
+    - Eg: 
+    
+    pub fn push_front(&mut self, val: T) {
+        
+        let mut node = Node{val: val, next: None};
+        
+        // basically self.head can't be on the right side of = anytime because it will be moved 
+        node.next = self.head; // this line will throw compile error as we are moving self.head into
+        // some inner variable 
+    }
+
+    - Eg2: 
+     
+     If you take mut self as function argument then rust compiler will not throw any error but 
+     after the function is consumed your Self object gets destroyed there's no way to recover the old value 
+
+     pub fn push_front(mut self, val: T) {
+
+        let mut node = Node{val: val, next: None};
+
+        node.next = self.head;
+        self.head = Some(Box::new(node));
+        self.len += 1;
+    }
+
+    We have to do this to then 
+
+    #[test]
+    fn test_linked_list_push_left() {
+        let mut list: LinkedList<i32> = LinkedList::<i32>::new();
+        list = list.push_left(1); // return Self everytime and play with it 
+        list = list.push_left(2);
+        list = list.push_left(3);
+        list.push_left(4);
+    }
+
+- Option class has many convenience methods like take(), as_ref(), as_mut() etc.. take() will vanish the 
+    contents inside the option and return it, this internally uses std::mem::replace() 
+
+
