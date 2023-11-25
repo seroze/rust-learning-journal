@@ -1,0 +1,5 @@
+- RefCell has two methods borrow() and borrow_mut(), it has interior mutability i.e you can pass a immutable reference but still change the contents
+    - By using RefCell you are blurring the lines between mutable and immutable reference use it when you don't want the hassle of keeping track mutable vs immutable issues 
+
+- Rc is for having multiple owners to the same object and last owner to go out of scope will clear the contents of the object
+    - 
